@@ -37,12 +37,19 @@ let routes= [
 				name: 'dispatch',
 				meta:{
 					name: '预约单发货',
-					tourist: true
 				},
 				component: () => import('@/views/dispatch.vue')
 			},
+			{
+				path: '/goods',
+				name: 'goods',
+				meta:{
+					name: '商品管理',
+				},
+				component: () => import('@/views/goods.vue')
+			},
 
-			]
+		]
 	},
 ]
 

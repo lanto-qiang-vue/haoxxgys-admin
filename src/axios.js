@@ -8,8 +8,6 @@ import { Message } from 'iview';
 axios.defaults.timeout = 60000
 
 // console.log(process.env.NODE_ENV)
-
-
 axios.defaults.baseURL = '/proxy/';
 axios.defaults.headers.post['Content-Type'] = 'application/json;charset=UTF-8';
 

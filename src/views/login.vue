@@ -4,37 +4,38 @@
 	<h1><img src="~@/assets/img/hoxiuxiu-logo.png"/>供应商后台系统</h1>
 	<div class="input-box">
 		<Tabs v-model="type">
-			<TabPane label="验证码登录" name="phone">
+			<TabPane label="验证码登录" name="SMS">
 				<Form ref="phone" :rules="rulePhone"  :model="formPhone"  @keydown.enter.native="toLogin()">
-					<FormItem prop="userMobile">
-						<Input v-model="formPhone.userMobile" :maxlength="11" size="large" placeholder="请输入手机号">
+					<FormItem prop="account">
+						<Input v-model="formPhone.account" :maxlength="11" size="large" placeholder="请输入手机号">
 						<span slot="prepend">
 	                  <Icon :size="16" type="ios-person"></Icon>
 	                </span>
 						</Input>
 					</FormItem>
-					<FormItem prop="captcha" class="captcha">
-						<Input v-model="formPhone.captcha" placeholder="请输入验证码" size="large">
+					<FormItem prop="captcha" class="pass">
+						<Input v-model="formPhone.pass" placeholder="请输入验证码" size="large">
 						<span slot="prepend">
 	                      <Icon :size="14" type="md-lock"></Icon>
 	                    </span>
 						</Input>
 						<countdown class="get-code" text="获取验证码" ref="countdown"
-						           :phone="formPhone.userMobile" @click="getCode" url="/hxxdc/insurance/sms/send/login"></countdown>
+						           :phone="formPhone.account" @click="getCode"
+						           :url="'/supplier/user/sms/'+formPhone.account"></countdown>
 					</FormItem>
 				</Form>
 			</TabPane>
-			<TabPane label="密码登录" name="pass">
+			<TabPane label="密码登录" name="PASS">
 				<Form ref="pass" :rules="rulePass" :model="formPass" @keydown.enter.native="toLogin()">
-					<FormItem prop="userName">
-						<Input v-model="formPass.userName" size="large" placeholder="请输入用户名">
+					<FormItem prop="account">
+						<Input v-model="formPass.account" size="large" placeholder="请输入用户名">
 						<span slot="prepend">
 	                  <Icon :size="16" type="ios-person"></Icon>
 	                </span>
 					</Input>
 					</FormItem>
-					<FormItem prop="password">
-						<Input type="password" v-model="formPass.password" size="large" placeholder="请输入密码">
+					<FormItem prop="pass">
+						<Input type="password" v-model="formPass.pass" size="large" placeholder="请输入密码">
 						<span slot="prepend">
 	                  <Icon :size="14" type="md-lock"></Icon>
 	                </span>
@@ -45,7 +46,7 @@
 
 			</TabPane>
 		</Tabs>
-		<Button type="primary" long size="large" @click="toLogin()">{{type=='phone'?'验证并登录':'登录'}}</Button>
+		<Button type="primary" long size="large" @click="toLogin()">{{type=='SMS'?'验证并登录':'登录'}}</Button>
 	</div>
 
 <Modal
@@ -103,15 +104,15 @@ export default {
 	components: {Countdown, Foot},
 	data(){
 		return{
-			type: 'phone',
+			type: 'SMS',
 			showFind:false,
 			formPhone: {
-				userMobile:'',
-				captcha:''
+				account:'',
+				pass:''
 			},
 			formPass: {
-				userName:'',
-				password:''
+				account:'',
+				pass:''
 			},
 			formReset:{
 				"mobileNo": "",
@@ -120,18 +121,18 @@ export default {
 				"smsCode": ""
 			},
 			rulePhone: {
-				userMobile:[
+				account:[
 					{ required: true, message: '请输入手机号码', },
 				],
-				captcha: [
+				pass: [
 					{ required: true,  message: '请填写验证码',}
 				],
 			},//规则验证
 			rulePass: {
-				userName:[
+				account:[
 					{ required: true, message: '请输入用户名', },
 				],
-				password: [
+				pass: [
 					{ required: true,  message: '请填写密码',}
 				],
 			},//规则验证
@@ -148,13 +149,11 @@ export default {
 	},
 	methods:{
 		toLogin(type){
-
 			let url = '', data = {}
-			if (this.type == 'phone') {
+			if (this.type == 'SMS') {
 				data = {
-					"account": this.formPhone.userMobile,
-					"loginMethod": "手机",
-					"password": this.formPhone.captcha,
+					loginType: this.type,
+					...this.formPhone
 				}
 				this.$refs.phone.validate((valid) => {
 					if (valid) {
@@ -163,9 +162,8 @@ export default {
 				})
 			}else{
 				data = {
-					"account": this.formPass.userName,
-					"loginMethod": "密码",
-					"password": this.formPass.password,
+					loginType: this.type,
+					...this.formPass
 				}
 				this.$refs.pass.validate((valid) => {
 					if (valid) {
@@ -173,20 +171,13 @@ export default {
 					}
 				})
 			}
-
-
 		},
-		toRequest(param){
+		toRequest(data){
 			this.$Spin.show();
-			this.axios.request({
-				url: '/hxxdc/insurance/user/login',
-				method: 'post',
-				data: param
-			}).then(res => {
+			this.axios.post('/supplier/user/login', data).then(res => {
 				if (res.data.code=="0") {
 					this.$store.dispatch('login', res.data);
-
-					this.$router.push({path: '/compare'})
+					this.goBackUrl()
 					this.$Message.success('登录成功')
 				}
 				this.$Spin.hide()
@@ -214,7 +205,15 @@ export default {
 					})
 				}
 			})
-		}
+		},
+		goBackUrl(){
+			let redirect= this.$route.query.redirect
+			if(redirect){
+				this.$router.replace({path: redirect})
+			}else{
+				this.$router.replace({path: '/dispatch'})
+			}
+		},
 	}
 }
 </script>
@@ -250,19 +249,20 @@ export default {
 			border:1px solid rgba(231,231,231,0.62);
 			background-color: white;
 			.get-code{
+				z-index: 999;
 				width: 90px;
 				line-height: 34px;
 				text-align: center;
 				position: absolute;
-				top: 0;
-				right: 0;
+				top: 2px;
+				right: 1px;
 				background-color: #ECF5FF;
 				border-radius: 2px;
-				border: 1px solid #B3D8FF;
+				/*border: 1px solid #B3D8FF;*/
 				color: #1890FF;
 				cursor: pointer;
 				&.off{
-					border: 1px solid #dcdee2;
+					border-left: 1px solid #dcdee2;
 					background-color: white;
 					color: #777777;
 					cursor: default;

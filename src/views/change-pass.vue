@@ -1,17 +1,17 @@
 <template>
 	<div class="change-pass">
-		<Form ref="fromPass" :rules="rulePass"  :model="fromPass"  :label-width="130" >
+		<Form ref="fromPass" :rules="rulePass"  :model="fromPass"  :label-width="130" style="width: 350px">
 			<FormItem label="操作员名称:">
 				<span>{{$store.state.userInfo?$store.state.userInfo.companyName: ''}}</span>
 			</FormItem>
 			<FormItem  label="当前登录密码:" prop="oldPassword">
-				<Input style="width: 250px;" type="password" v-model="fromPass.oldPassword"  size="large" placeholder="请输入当前登录密码"></Input>
+				<Input type="password" v-model="fromPass.oldPassword"  size="large" placeholder="请输入当前登录密码"></Input>
 			</FormItem>
 			<FormItem   label="新登录密码:" prop="newPassword">
-				<Input style="width: 250px;" type="password" v-model="fromPass.newPassword"  size="large" placeholder="请输入新登录密码"></Input>
+				<Input type="password" v-model="fromPass.newPassword"  size="large" placeholder="请输入新登录密码"></Input>
 			</FormItem>
 			<FormItem   label="确认新登录密码:" prop="rePassword">
-				<Input style="width: 250px;" type="password" v-model="fromPass.rePassword"  size="large" placeholder="请再次输入登录密码"></Input>
+				<Input type="password" v-model="fromPass.rePassword"  size="large" placeholder="请再次输入登录密码"></Input>
 			</FormItem>
 			<FormItem>
 				<Button type="primary" @click="commitFun('fromPass')">确定</Button>
@@ -75,6 +75,6 @@
 
 <style scoped>
 .change-pass{
-	padding-left: 20%;
+	/*padding: 10px;*/
 }
 </style>

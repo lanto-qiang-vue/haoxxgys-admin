@@ -12,20 +12,20 @@
 	</div>
 	</div>
 	<Layout>
-		<Sider hide-trigger class="left-side">
-			<Menu active-name="" width="auto">
-				<MenuItem name="1" to="/dispatch">内容管理</MenuItem>
-				<MenuItem name="1" to="/dispatch">内容管理</MenuItem>
-				<MenuItem name="1" to="/dispatch">内容管理</MenuItem>
+		<Sider hide-trigger class="left-side" :width="160">
+			<Menu :active-name="path" width="auto">
+				<MenuItem v-for="(item, key) in menu" :key="key" v-show="!item.meta.hideMenu"
+				          :name="item.path" :to="item.path">{{item.meta.name}}</MenuItem>
 			</Menu>
 		</Sider>
 		<Content>
 			<div class="body">
-
 				<div class="sub-title">
 					<Breadcrumb><BreadcrumbItem>{{title}}</BreadcrumbItem></Breadcrumb>
 				</div>
-				<router-view></router-view>
+				<div style="padding: 10px">
+					<router-view></router-view>
+				</div>
 			</div>
 		</Content>
 	</Layout>
@@ -35,19 +35,30 @@
 
 <script>
 import Foot from '@/components/Footer.vue'
-import router from '@/router'
 export default {
 	name: "main-body",
 	components: { Foot},
 	computed:{
 		title(){
 			return this.$route.meta.name
+		},
+		path(){
+			return this.$route.path
+		},
+		menu(){
+			let arr= this.$router.routes, list=[]
+			for(let i in arr){
+				if(arr[i].name=='main'){
+					list= arr[i].children
+				}
+			}
+			return list
 		}
 	},
 	mounted(){
 		// console.log(this.$store.state.userInfo)
 		// console.log('router.routes', router.routes)
-		console.log('this.$router.routes', this.$router)
+		// console.log('this.$router.routes', this.$route)
 	},
 	methods:{
 		changePass(){
@@ -58,14 +69,10 @@ export default {
 				title: '确定退出登录吗？',
 				content:'',
 				onOk: ()=> {
-					this.axios.request({
-						url: '/hxxdc/insurance/user/logout',
-						method: 'get',
-					}).then(res => {
-						this.$store.dispatch('logout');
-						this.$router.push({
-							path: '/login',
-						})
+					this.axios.get('/supplier/user/logout')
+					this.$store.dispatch('logout');
+					this.$router.push({
+						path: '/login',
 					})
 				}
 			})
@@ -95,6 +102,7 @@ export default {
 				vertical-align: middle;
 			}
 			.right{
+				cursor: default;
 				float: right;
 				font-size: 14px;
 				color: #333333;

@@ -13,7 +13,7 @@
     :columns="columns"
     :stripe="stripe"
     border
-    :highlight-row="false"
+    :highlight-row="true"
     :show-header="showHeader"
     :width="width"
     :height="tableHeight"
@@ -228,9 +228,10 @@
         }else if(column['order']=='normal'){
             this.$emit('onSortChange','normal',column['column']['key']);
         }
-
-
-      }
+      },
+	    clearCurrentRow(){
+		    this.$refs.tablesMain.clearCurrentRow()
+	    },
     },
     activated(){
       // this.resize(500)
@@ -240,7 +241,7 @@
 
 <style lang="less" scoped>
 .common-table{
-  padding: 10px;
+  /*padding: 10px;*/
   background-color: white;
   /*height: 100%;*/
   overflow: auto;
@@ -251,14 +252,11 @@
     margin-bottom: 10px;
   }
   .operate{
-    margin-bottom: 10px;
-    padding: 0 10px;
-    border: 1px solid #dcdee2;
-    border-radius: 3px;
-	  position: relative;
+    /*margin-bottom: 10px;*/
+	position: relative;
   }
   .operate button{
-    margin: 0 5px 5px 0;
+    margin: 0 10px 10px 0;
   }
   .table-bottom{
     /*position: absolute;*/

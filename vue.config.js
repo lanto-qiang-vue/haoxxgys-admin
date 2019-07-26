@@ -19,7 +19,7 @@ module.exports = {
 		}
 	},
 	devServer: {
-		port: 9999,
+		port: 9998,
 		proxy: {
 			'/proxy/': {
 				target: 'http://192.168.169.231:8888/',
