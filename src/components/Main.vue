@@ -11,16 +11,31 @@
 		</div>
 	</div>
 	</div>
-	<div class="body">
-		<h1>{{title}}</h1>
-		<router-view></router-view>
-	</div>
+	<Layout>
+		<Sider hide-trigger class="left-side">
+			<Menu active-name="" width="auto">
+				<MenuItem name="1" to="/dispatch">内容管理</MenuItem>
+				<MenuItem name="1" to="/dispatch">内容管理</MenuItem>
+				<MenuItem name="1" to="/dispatch">内容管理</MenuItem>
+			</Menu>
+		</Sider>
+		<Content>
+			<div class="body">
+
+				<div class="sub-title">
+					<Breadcrumb><BreadcrumbItem>{{title}}</BreadcrumbItem></Breadcrumb>
+				</div>
+				<router-view></router-view>
+			</div>
+		</Content>
+	</Layout>
 	<foot></foot>
 </div>
 </template>
 
 <script>
 import Foot from '@/components/Footer.vue'
+import router from '@/router'
 export default {
 	name: "main-body",
 	components: { Foot},
@@ -30,7 +45,9 @@ export default {
 		}
 	},
 	mounted(){
-		console.log(this.$store.state.userInfo)
+		// console.log(this.$store.state.userInfo)
+		// console.log('router.routes', router.routes)
+		console.log('this.$router.routes', this.$router)
 	},
 	methods:{
 		changePass(){
@@ -95,17 +112,25 @@ export default {
 			}
 		}
 	}
+	.left-side{
+		background-color: white;
+		.ivu-menu-vertical.ivu-menu-light:after{
+			background: none;
+		}
+		.ivu-menu-item:hover, .ivu-menu-submenu-title:hover {
+			background-color: #f1f1f1;
+		}
+	}
 	.body{
 		background-color: white;
-		margin: 10px 20px;
+		margin: 10px;
 		min-height: 600px;
 		overflow: hidden;
-		>h1{
-			font-size: 30px;
-			text-align: center;
-			font-weight: 400;
-			line-height: 50px;
-			margin: 20px 0;
+		.sub-title{
+			line-height: 38px;
+			padding: 0 10px;
+			background-color: white;
+			box-shadow: 0 1px 4px 0 rgba(0, 21, 41, 0.12);
 		}
 	}
 }

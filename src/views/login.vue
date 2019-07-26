@@ -1,7 +1,7 @@
 <template>
 <div class="login">
 <div class="center">
-	<h1><img src="~@/assets/img/hoxiuxiu-logo.png"/>保险理赔数据比对</h1>
+	<h1><img src="~@/assets/img/hoxiuxiu-logo.png"/>供应商后台系统</h1>
 	<div class="input-box">
 		<Tabs v-model="type">
 			<TabPane label="验证码登录" name="phone">
@@ -39,7 +39,7 @@
 	                  <Icon :size="14" type="md-lock"></Icon>
 	                </span>
 						</Input>
-						<a class="forget" @click="resetFun">忘记密码？</a>
+						<!--<a class="forget" @click="resetFun">忘记密码？</a>-->
 					</FormItem>
 				</Form>
 

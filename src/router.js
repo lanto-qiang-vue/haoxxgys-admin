@@ -3,8 +3,7 @@ import Router from 'vue-router'
 import Main from '@/components/Main.vue'
 Vue.use(Router)
 
-export default new Router({
-routes: [
+let routes= [
 	{
 		path: '/',
 		name: 'index',
@@ -19,6 +18,7 @@ routes: [
 		component: () => import('@/views/login.vue')
 	},
 	{
+		name: 'main',
 		path: '/main',
 		alias: '/',
 		component: Main,
@@ -27,19 +27,29 @@ routes: [
 				path: '/change-pass',
 				name: 'change-pass',
 				meta:{
-					name: '修改密码'
+					name: '修改密码',
+					hideMenu: true
 				},
 				component: () => import('@/views/change-pass.vue')
 			},
 			{
-				path: '/compare',
-				name: 'compare',
+				path: '/dispatch',
+				name: 'dispatch',
 				meta:{
-					name: '保险理赔数据比对',
+					name: '预约单发货',
+					tourist: true
 				},
-				component: () => import('@/views/compare.vue')
+				component: () => import('@/views/dispatch.vue')
 			},
-		]
+
+			]
 	},
 ]
+
+let router=  new Router({
+	routes
 })
+router.__proto__.routes= routes
+console.log('router.routes', router.routes)
+
+export default router

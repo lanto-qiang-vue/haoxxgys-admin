@@ -3,6 +3,7 @@ import store from '@/store'
 import router from '@/router'
 import { Message } from 'iview';
 
+// let router= Router.router
 // axios 配置;
 axios.defaults.timeout = 60000
 
