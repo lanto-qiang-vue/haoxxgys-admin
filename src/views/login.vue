@@ -72,10 +72,11 @@
 				</span>
 				</Input>
 				<countdown class="get-code" text="获取验证码" ref="countdown"
-							:phone="formReset.mobileNo" @click="getCode" url="/hxxdc/insurance/sms/send/reset"></countdown>
+				           :phone="formReset.mobileNo" @click="getCode"
+                           :url="'/supplier/user/sms/'+formPhone.account"></countdown>
 			</FormItem>
 			<FormItem prop="password">
-				<Input type="password" v-model="formReset.password" size="large" placeholder="请输入密码">
+				<Input type="password" v-model="formReset.newPassword" size="large" placeholder="请输入密码">
 					<span slot="prepend"><Icon :size="14" type="md-lock"></Icon></span>
 				</Input>
 			</FormItem>
@@ -116,7 +117,7 @@ export default {
 			},
 			formReset:{
 				"mobileNo": "",
-				"password": "",
+				"newPassword": "",
 				"rePassword": "",
 				"smsCode": ""
 			},
@@ -141,7 +142,7 @@ export default {
 					{ required: true, message: '请输入手机号码', },
 				],
 				smsCode:[{ required: true,  message: '请填写验证码',}],
-				password:[{ required: true,  message: '请输入密码',}],
+				newPassword:[{ required: true,  message: '请输入密码',}],
 				rePassword:[{ required: true,  message: '请输入密码',}],
 			},
 
@@ -194,7 +195,7 @@ export default {
 			this.$refs.reset.validate((valid) => {
 				if (valid) {
 					this.axios.request({
-						url: '/hxxdc/insurance/user/forget/password',
+						url: '/supplier/user/pass/reset',
 						method: 'post',
 						data: this.formReset
 					}).then(res => {

@@ -50,16 +50,13 @@
 				this.$refs[name].validate((valid) => {
 					if(valid){
 						this.axios.request({
-							url: '/hxxdc/insurance/user/update/password',
+							url: '/supplier/user/pass/edit',
 							method: 'post',
 							data: this.fromPass
 						}).then( (res) => {
 							if(res.data.code=='0'){
 								this.$Message.info('修改成功,请重新登录');
-								localStorage.removeItem('ACCESSTOKEN')
-								localStorage.removeItem('USERINFO')
-								this.$store.commit('setToken', '')
-								this.$store.commit('setUser', '')
+								this.$store.dispatch('logout');
 								this.$router.push({
 									path: '/login',
 								})

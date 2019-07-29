@@ -8,7 +8,6 @@
 			<Button type="info" :disabled="!detail.id" @click="showDetail= true">查看/编辑</Button>
 		</div>
 	</common-table>
-
 	<Modal v-model="showDetail"
 			title="商品详情"
 			width="500"
@@ -20,7 +19,7 @@
 			:transition-names="['', '']">
 		<Form :label-width="100" ref="detail" :rules="rules"  :model="detail" style="width: 350px">
 			<FormItem label="品名：" prop="name">
-				<Input type="text" v-model="detail.name" placeholder="请输入"></Input>
+				<Input type="text" v-model="detail.name" placeholder="请输入" clearable></Input>
 			</FormItem>
 			<FormItem v-for="(item, key) in detailOption" :key="key"
 					:label="item.name+'：'" :prop="key">
@@ -29,16 +28,6 @@
 					        :value="item2.id">{{item2.name}}</Option>
 				</Select>
 			</FormItem>
-			<!--<FormItem label="品牌：" prop="pp">-->
-			<!--</FormItem>-->
-			<!--<FormItem label="粘度：" prop="nd">-->
-			<!--</FormItem>-->
-			<!--<FormItem label="类型：" prop="lx">-->
-			<!--</FormItem>-->
-			<!--<FormItem label="容量：" prop="rl">-->
-			<!--</FormItem>-->
-			<!--<FormItem label="等级：" prop="dj">-->
-			<!--</FormItem>-->
 		</Form>
 		<div slot="footer">
 			<Button @click="closeDetail">取消</Button>
@@ -67,7 +56,6 @@ export default {
 		CommonTable,
 	},
 	data(){
-
 		return{
 			columns: [
 				{title: '商品编号', key: 'id', minWidth: 80},

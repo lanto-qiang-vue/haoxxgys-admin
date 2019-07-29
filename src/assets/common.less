@@ -263,24 +263,28 @@ p {
   }
 }
 
-.btn() {
-  height: 32px;
-  line-height: 30px;
-  > *{
-    display: inline-block;
-    line-height: 30px;
-    vertical-align: middle;
-    padding-bottom: 2px;
-  }
-  &-small {
-    height: 26px;
-    line-height: 24px;
-    padding: 0 15px;
-    > *{
-      line-height: 24px;
-    }
-  }
+.ivu-btn-icon-only.ivu-btn-circle > .ivu-icon{
+  vertical-align: middle;
+  line-height: inherit;
 }
+//.btn() {
+//  height: 32px;
+//  line-height: 30px;
+//  > *{
+//    display: inline-block;
+//    line-height: 30px;
+//    vertical-align: middle;
+//    padding-bottom: 2px;
+//  }
+//  &-small {
+//    height: 26px;
+//    line-height: 24px;
+//    padding: 0 15px;
+//    > *{
+//      line-height: 24px;
+//    }
+//  }
+//}
 .ivu-btn-blue{
   background-color:#9BB0C3FF;
   color:#FFFFFFFF;
@@ -316,10 +320,13 @@ p {
 }
 
 .ivu-input-number input{
-  text-align: right;
+  //text-align: right;
 }
 .ivu-input-number:hover input{
-  padding-right: 25px;
+  //padding-right: 25px;
+}
+.ivu-input-number-handler-wrap{
+  display: none;
 }
 .ivu-collapse > .ivu-collapse-item.ivu-collapse-item-active > .ivu-collapse-header{
   border-bottom:1px solid #E2E2E2;
