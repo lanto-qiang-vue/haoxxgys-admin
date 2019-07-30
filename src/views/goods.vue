@@ -23,7 +23,7 @@
 			</FormItem>
 			<FormItem v-for="(item, key) in detailOption" :key="key"
 					:label="item.name+'：'" :prop="key">
-				<Select placeholder="请选择" v-model="detail[key]" clearable transfer >
+				<Select placeholder="请选择" v-model="detail[key]" clearable transfer>
 					<Option v-for="(item2, index2) in item.data" :key="index2"
 					        :value="item2.id">{{item2.name}}</Option>
 				</Select>
@@ -81,6 +81,9 @@ export default {
 				"rl": {id: 40, name:'容量', data: []},
 				"lx": {id: 41, name:'类型', data: []},
 				"dj": {id: 42, name:'等级', data: []},
+			},
+			query: {
+				pl: ''
 			}
 		}
 	},
@@ -97,14 +100,13 @@ export default {
 		}
 	},
 	mounted(){
-		this.getList()
 		this.getDict()
 	},
 	methods:{
 		getList(){
 			this.loading= true
 			this.axios.post('/supplier/goods/list',{
-				pl: '',
+				pl: this.query.pl,
 				pageNo: this.page,
 				pageSize: this.limit,
 			}).then( (res) => {
@@ -124,7 +126,8 @@ export default {
 						item.data= arr
 
 						if(key=='pl'){
-
+							this.setPl()
+							this.getList()
 						}
 						// if(arr.length==1){
 						// 	this.detail[key]= arr[0].id
@@ -133,6 +136,14 @@ export default {
 					}
 				})
 			}
+		},
+		setPl(){
+			let arr= this.detailOption.pl.data
+			arr.map((item)=>{
+				if(item.name.indexOf('机油')>=0){
+					this.query.pl= item.id
+				}
+			})
 		},
 		ok(){
 			this.$refs.detail.validate(validator=>{
@@ -156,6 +167,7 @@ export default {
 			setTimeout(()=>{
 				this.$refs.detail.resetFields()
 				setTimeout(()=>{
+					this.detail.pl= this.query.pl
 					this.showDetail= true
 				},0)
 			},10)

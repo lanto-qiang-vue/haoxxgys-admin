@@ -201,14 +201,25 @@ export default {
 				this.loading= false
 			})
 		},
-		getGoods(name){
-			this.axios.post('/supplier/goods/list',{
-				name: name|| '',
-				pageNo: 1,
-				pageSize: 1000,
-			}).then( (res) => {
+		getGoods(){
+			let id= ''
+			this.axios.get('/dict/getValuesByTypeId/37').then( (res) => {
 				if(res.data.code=='0'){
-					this.goods= res.data.items
+					let arr= res.data.items
+					arr.map((item)=>{
+						if(item.name.indexOf('机油')>=0){
+							id= item.id
+							this.axios.post('/supplier/goods/list',{
+								pl: id,
+								pageNo: 1,
+								pageSize: 1000,
+							}).then( (res2) => {
+								if(res2.data.code=='0'){
+									this.goods= res2.data.items
+								}
+							})
+						}
+					})
 				}
 			})
 		},
@@ -241,7 +252,7 @@ export default {
 			this.selGoods.pop()
 		},
 		chGoods(val, index){
-			console.log(val)
+			// console.log(val)
 			if(val){
 				this.goods.map((item)=>{
 					if(item.id== val.value){
