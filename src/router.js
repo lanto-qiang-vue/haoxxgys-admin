@@ -48,6 +48,14 @@ let routes= [
 				},
 				component: () => import('@/views/goods.vue')
 			},
+			{
+				path: '/invoice',
+				name: 'invoice',
+				meta:{
+					name: '发货列表',
+				},
+				component: () => import('@/views/invoice.vue')
+			},
 
 		]
 	},
@@ -57,6 +65,6 @@ let router=  new Router({
 	routes
 })
 router.__proto__.routes= routes
-console.log('router.routes', router.routes)
+// console.log('router.routes', router.routes)
 
 export default router

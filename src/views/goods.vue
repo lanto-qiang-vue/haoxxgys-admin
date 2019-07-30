@@ -104,6 +104,7 @@ export default {
 		getList(){
 			this.loading= true
 			this.axios.post('/supplier/goods/list',{
+				pl: '',
 				pageNo: this.page,
 				pageSize: this.limit,
 			}).then( (res) => {
@@ -121,6 +122,10 @@ export default {
 					if(res.data.code=='0'){
 						let arr= res.data.items
 						item.data= arr
+
+						if(key=='pl'){
+
+						}
 						// if(arr.length==1){
 						// 	this.detail[key]= arr[0].id
 						// }

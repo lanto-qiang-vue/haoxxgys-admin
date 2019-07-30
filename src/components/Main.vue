@@ -69,10 +69,11 @@ export default {
 				title: '确定退出登录吗？',
 				content:'',
 				onOk: ()=> {
-					this.axios.get('/supplier/user/logout')
-					this.$store.dispatch('logout');
-					this.$router.push({
-						path: '/login',
+					this.axios.get('/supplier/user/logout').then((res)=>{
+						this.$store.dispatch('logout');
+						this.$router.push({
+							path: '/login',
+						})
 					})
 				}
 			})

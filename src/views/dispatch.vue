@@ -8,7 +8,7 @@
 	              @changePage="changePage" @changePageSize="changePageSize" @onRowClick="onRowClick" ref="table"
 	              :page="page" class="table">
 		<div slot="operate" style="margin-top: 5px">
-			<Button type="primary">发货</Button>
+			<Button type="primary" @click="openPost" :disabled="!detail.id">发货</Button>
 			<!--<span>2家门店</span>-->
 			<Button type="info" @click="openGoods" :disabled="!detail.id">选择商品</Button>
 		</div>
@@ -32,20 +32,24 @@
 			<FormItem label="车型：">
 				<span>{{detail.vehicleModel}}</span>
 			</FormItem>
+			<FormItem label="要求送达时间">
+				<span>{{detail.requestDeliveryTime}}</span>
+			</FormItem>
 			<FormItem label="选择商品：">
 				<!--<ul v-if="detail.goods">-->
 				<li v-for="(item , key) in selGoods" :key="key">
 					<Select placeholder="请选择" v-model="item.id" style="width: 300px" filterable label-in-value
-					@on-change="chGoods">
+					@on-change="chGoods($event, key)">
 						<Option v-for="(item2, key2) in goods" :key="key2" :value="item2.id">{{item2.ppName+item2.name+item2.lxName+item2.ndName+item2.djName+' '+item2.rlName}}</Option>
 					</Select>
-					<InputNumber  v-model="item.num" :min="1" :max="100" placeholder="数量"/>
+					<InputNumber  v-model="item.num" :min="1" :max="10" placeholder="数量"/>
 					<span style="position: relative;left: -20px;">瓶</span>
 					<Button type="default" icon="md-add" shape="circle" @click="goodsAdd"
 					        v-show="selGoods.length==1"></Button>
 					<Button type="default" icon="md-remove" shape="circle" @click="goodsMinus"
 					        v-show="selGoods.length==2&&key==1"></Button>
 				</li>
+				<p>已选容量：{{nowQuantity}}升</p>
 				<!--</ul>-->
 			</FormItem>
 			<FormItem label="推荐用量：">
@@ -58,6 +62,28 @@
 		<div slot="footer">
 			<Button @click="closeDetail">取消</Button>
 			<Button type="primary" @click="okGoods">确定</Button>
+		</div>
+	</Modal>
+
+	<Modal v-model="showPost"
+	       title="发货确认"
+	       width="600"
+	       :scrollable="true"
+	       :transfer= "true"
+	       :mask-closable="false"
+	       :transition-names="['', '']">
+		<h3>向门店({{postData.storeName}})发送以下商品</h3>
+		<Table
+				class-name="dispatch-goods"
+				ref="post"
+				:data="postData.items"
+				:columns="postColumns"
+				:loading="!postData.storeId"
+				border
+				></Table>
+		<div slot="footer">
+			<Button @click="closeDetail">取消</Button>
+			<Button type="primary" @click="okPost" :desabled="!postData.storeId">确认发货</Button>
 		</div>
 	</Modal>
 </div>
@@ -81,14 +107,21 @@ export default {
 			showGoods: false,
 			detail: {},
 			selGoods: [],
-			goods:[]
+			goods:[],
+
+			postData: {items:[]},
+			postColumns: [
+				{title: '品类', key: 'pl', width: 70},
+				{title: '商品', key: 'goodsDesc', minWidth: 150},
+				{title: '发货数量（桶）', key: 'goodsNum', width: 120},
+			],
 		}
 	},
 	computed:{
 		columns(){
 			return [
-				{title: '门店名称', key: 'storeName', minWidth: 140},
-				{title: '门店地址', key: 'storeAddr', minWidth: 140},
+				{title: '门店名称', key: 'storeName', minWidth: 160},
+				{title: '门店地址', key: 'storeAddr', minWidth: 160},
 				{title: '车型', key: 'vehicleModel', minWidth: 140},
 				{title: '品类', key: 'pls', minWidth: 80,
 					render:(h,params) => h('span',  params.row.pls[0].name)},
@@ -129,7 +162,7 @@ export default {
 						let str= params.row.parts[params.row.pls[0].id].comments[0]
 						return h('span',  str.tjsyl+ str.unit)
 					}},
-				{title: '要求送达日期', key: 'requestDeliveryTime', minWidth: 120,},
+				{title: '要求送达日期', key: 'requestDeliveryTime', minWidth: 110,},
 			]
 		},
 		detailSuggest(){
@@ -139,6 +172,16 @@ export default {
 			}
 			return arr
 		},
+		nowQuantity(){
+			let nowQuantity= 0
+			this.selGoods.map((item)=> {
+				if (item.id && item.num) {
+					let qua = parseFloat(item.quantity.split('L')[0])
+					nowQuantity += item.num * qua
+				}
+			})
+			return nowQuantity
+		}
 	},
 	mounted(){
 		this.getList()
@@ -165,9 +208,6 @@ export default {
 				pageSize: 1000,
 			}).then( (res) => {
 				if(res.data.code=='0'){
-					// res.data.items.map((item)=>{
-					// 	this.goods.push({id: item.id, label: })
-					// })
 					this.goods= res.data.items
 				}
 			})
@@ -182,6 +222,13 @@ export default {
 		setGoods(){
 			if(this.detail.pls && this.detail.pls.length){
 				this.selGoods= this.detail.parts[this.detail.pls[0].id].items
+				this.selGoods.map((item)=>{
+					this.goods.map((item2)=>{
+						if(item.id==item2.id){
+							item.quantity= item2.rlName
+						}
+					})
+				})
 			}
 			if(!this.selGoods.length){
 				this.selGoods= [{id: null, num: null}]
@@ -193,24 +240,106 @@ export default {
 		goodsMinus(){
 			this.selGoods.pop()
 		},
-		chGoods(val){
+		chGoods(val, index){
 			console.log(val)
+			if(val){
+				this.goods.map((item)=>{
+					if(item.id== val.value){
+						this.selGoods[index].quantity= item.rlName
+					}
+				})
+			}
 		},
 		okGoods(){
-
+			let pass= false,
+				min= parseFloat(this.detailSuggest[0].tjsyl),
+				max= 0,
+				nowQuantity= 0,
+				arr= [];
+			this.selGoods.map((item)=>{
+				if(item.id && item.num){
+					let qua= parseFloat(item.quantity.split('L')[0])
+					pass= true
+					nowQuantity+= item.num * qua
+					if(max< qua){
+						max= qua
+					}
+					arr.push({
+						goodsId: item.id,
+						goodsNum: item.num,
+						pl: this.goods[0].pl
+					})
+				}else{
+					pass= false
+				}
+			})
+			max+= min
+			console.log(min, max, nowQuantity)
+			if(pass== true){
+				if(nowQuantity < min || nowQuantity > max) {
+					pass= false
+					this.$Message.error(`容量要在${min}~${max}之间`)
+				}
+			}else{
+				this.$Message.error('请填写完整')
+			}
+			if(pass== true){
+				this.axios.post('/supplier/order/edit',{
+					id: this.detail.id,
+					items: arr
+				}).then( (res) => {
+					if(res.data.code=='0'){
+						this.$Message.success('选择成功')
+						this.getList()
+						this.closeDetail()
+					}
+				})
+			}
+		},
+		openPost(){
+			this.showPost= true
+			this.axios.get('/supplier/order/merge/'+ this.detail.storeId).then( (res) => {
+				if(res.data.code=='0'){
+					this.postData= res.data.item
+				}
+			})
+		},
+		okPost(){
+			let arr= []
+			this.postData.items.map((item)=>{
+				arr.push({
+					goodsId: item.goodsId,
+					num: item.goodsNum,
+				})
+			})
+			this.axios.post('/supplier/invoice/add',{
+				type: 0,
+				storeId: this.postData.storeId,
+				invoiceItems: arr
+			}).then( (res) => {
+				if(res.data.code=='0'){
+					this.$Message.success('发货成功')
+					this.getList()
+					this.closeDetail()
+				}
+			})
 		},
 		closeDetail(){
 			this.$refs.table.clearCurrentRow()
 			this.$refs.detail.resetFields()
+			this.detail= {}
+			this.postData= {items:[]}
 			this.showPost= false
 			this.showGoods= false
 		},
 		changePage(page){
 			this.page= page
+			this.closeDetail()
 			this.getList()
 		},
 		changePageSize(size){
 			this.limit= size
+			this.closeDetail()
 			this.getList()
 		},
 	}
@@ -222,7 +351,6 @@ export default {
 	.operate{
 		padding-top: 5px;
 	}
-
 }
 </style>
 
