@@ -24,7 +24,7 @@
 	              :page="page" :loading="loading" class="table">
 	</common-table>
 	<ul>
-		<li v-for="(item, key) in goods" :key="key">{{`${item.fullName },总发货量：${item.num}`}}</li>
+		<li v-for="(item, key) in goods" :key="key">{{`${item.fullName }，总发货量：${item.num}`}}</li>
 	</ul>
 </div>
 </template>
@@ -64,8 +64,8 @@ export default {
 	computed:{
 		columns(){
 			return [
-				{title: '门店名称', key: 'storeName', minWidth: 140},
-				{title: '门店地址', key: 'storeAddr', minWidth: 140},
+				{title: '门店名称', key: 'storeName', minWidth: 150},
+				{title: '门店地址', key: 'storeAddr', minWidth: 150},
 				{title: '机油 [品牌 品名 等级 粘度 容量 分类 数量(桶)]', key: 'items', minWidth: 330,
 					render:(h,params) => {
 						let arr= [], list= params.row.items

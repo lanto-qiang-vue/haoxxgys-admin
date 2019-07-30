@@ -272,7 +272,7 @@ export default {
 					let qua= parseFloat(item.quantity.split('L')[0])
 					pass= true
 					nowQuantity+= item.num * qua
-					if(max< qua){
+					if(max> qua || !max){
 						max= qua
 					}
 					arr.push({
@@ -289,7 +289,7 @@ export default {
 			if(pass== true){
 				if(nowQuantity < min || nowQuantity > max) {
 					pass= false
-					this.$Message.error(`容量要在${min}~${max}之间`)
+					this.$Message.error(`已选容量要在${min}~${max}之间`)
 				}
 			}else{
 				this.$Message.error('请填写完整')

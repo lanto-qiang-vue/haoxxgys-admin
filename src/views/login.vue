@@ -212,7 +212,7 @@ export default {
 			if(redirect){
 				this.$router.replace({path: redirect})
 			}else{
-				this.$router.replace({path: '/dispatch'})
+				this.$router.replace({path: '/main'})
 			}
 		},
 	}

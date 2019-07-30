@@ -45,20 +45,35 @@ export default {
 		path(){
 			return this.$route.path
 		},
+		getMenu(){
+			return this.$store.state.userInfo.items|| []
+		},
 		menu(){
 			let arr= this.$router.routes, list=[]
 			for(let i in arr){
 				if(arr[i].name=='main'){
-					list= arr[i].children
+					arr[i].children.map((item)=>{
+						this.getMenu.map((item2)=>{
+							if(item.path== item2.uri){
+								list.push(item)
+							}
+						})
+					})
 				}
 			}
 			return list
 		}
 	},
+	watch:{
+
+	},
 	mounted(){
 		// console.log(this.$store.state.userInfo)
 		// console.log('router.routes', router.routes)
 		// console.log('this.$router.routes', this.$route)
+		if(this.$route.name=='main'){
+			this.$router.replace(this.menu[0].path)
+		}
 	},
 	methods:{
 		changePass(){

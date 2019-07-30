@@ -56,7 +56,22 @@ let routes= [
 				},
 				component: () => import('@/views/invoice.vue')
 			},
-
+			{
+				path: '/supplier-manage',
+				name: 'supplier-manage',
+				meta:{
+					name: '供应商管理',
+				},
+				component: () => import('@/views/manage/supplier.vue')
+			},
+			{
+				path: '/user-manage',
+				name: 'user-manage',
+				meta:{
+					name: '用户管理',
+				},
+				component: () => import('@/views/manage/user.vue')
+			},
 		]
 	},
 ]
