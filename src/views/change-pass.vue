@@ -1,8 +1,8 @@
 <template>
 	<div class="change-pass">
 		<Form ref="fromPass" :rules="rulePass"  :model="fromPass"  :label-width="130" style="width: 350px">
-			<FormItem label="操作员名称:">
-				<span>{{$store.state.userInfo?$store.state.userInfo.companyName: ''}}</span>
+			<FormItem label="用户昵称:">
+				<span>{{$store.state.userInfo?$store.state.userInfo.nickname: ''}}</span>
 			</FormItem>
 			<FormItem  label="当前登录密码:" prop="oldPassword">
 				<Input type="password" v-model="fromPass.oldPassword"  size="large" placeholder="请输入当前登录密码"></Input>

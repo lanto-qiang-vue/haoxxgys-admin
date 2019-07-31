@@ -2,7 +2,7 @@
 <div class="user-manage">
 	<Form :label-width="90" class="common-form">
 		<FormItem label="账号:">
-			<Input v-model="query.name" clearable/>
+			<Input v-model="query.name" :maxlength="11" clearable/>
 		</FormItem>
 		<FormItem label="昵称:">
 			<Input v-model="query.shortName" clearable/>
@@ -54,7 +54,7 @@
 		</Form>
 		<div slot="footer">
 			<Button @click="closeDetail">取消</Button>
-			<Button type="success" @click="ok">新增</Button>
+			<Button type="primary" @click="ok">新增</Button>
 		</div>
 	</Modal>
 </div>

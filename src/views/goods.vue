@@ -4,7 +4,7 @@
 	              @changePage="changePage" @changePageSize="changePageSize" @onRowClick="onRowClick"
 	              :page="page" :loading="loading" class="table">
 		<div slot="operate">
-			<Button type="primary" @click="clickCreate">新增商品</Button>
+			<Button type="success" @click="clickCreate">新增商品</Button>
 			<Button type="info" :disabled="!detail.id" @click="showDetail= true">查看/编辑</Button>
 		</div>
 	</common-table>

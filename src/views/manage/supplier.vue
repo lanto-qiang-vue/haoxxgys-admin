@@ -21,7 +21,7 @@
 	              @changePage="changePage" @changePageSize="changePageSize" @onRowClick="onRowClick"
 	              ref="table" class="table">
 		<div slot="operate">
-			<Button type="primary" @click="clickCreate">新增</Button>
+			<Button type="success" @click="clickCreate">新增</Button>
 			<Button type="info" :disabled="!detail.id" @click="showDetail= true">查看/编辑</Button>
 			<Button :type="isDisabled? 'success': 'error'" @click="clickStatus"
 			        :disabled="!detail.id">{{isDisabled? '启用' : '禁用'}}</Button>
