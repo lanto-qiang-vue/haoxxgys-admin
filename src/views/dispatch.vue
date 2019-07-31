@@ -125,7 +125,7 @@ export default {
 				{title: '车型', key: 'vehicleModel', minWidth: 140},
 				{title: '品类', key: 'pls', minWidth: 80,
 					render:(h,params) => h('span',  params.row.pls[0].name)},
-				{title: '商品/预约数量（桶）', key: 'parts', minWidth: 230,
+				{title: '已选商品 * 数量（桶）', key: 'parts', minWidth: 230,
 					render:(h,params) => {
 						let arr= [], list= params.row.parts[params.row.pls[0].id].items
 						list.map((item)=>{
@@ -312,6 +312,8 @@ export default {
 			this.axios.get('/supplier/order/merge/'+ this.detail.storeId).then( (res) => {
 				if(res.data.code=='0'){
 					this.postData= res.data.item
+				}else{
+					this.closeDetail()
 				}
 			})
 		},

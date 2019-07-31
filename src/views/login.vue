@@ -40,7 +40,7 @@
 	                  <Icon :size="14" type="md-lock"></Icon>
 	                </span>
 						</Input>
-						<!--<a class="forget" @click="resetFun">忘记密码？</a>-->
+						<a class="forget" @click="resetFun">忘记密码？</a>
 					</FormItem>
 				</Form>
 
