@@ -73,7 +73,7 @@
 				</Input>
 				<countdown class="get-code" text="获取验证码" ref="countdown"
 				           :phone="formReset.mobileNo" @click="getCode"
-                           :url="'/supplier/user/sms/'+formPhone.account"></countdown>
+                           :url="'/supplier/user/sms/'+formReset.mobileNo"></countdown>
 			</FormItem>
 			<FormItem prop="password">
 				<Input type="password" v-model="formReset.newPassword" size="large" placeholder="请输入密码">

@@ -5,7 +5,7 @@
 		<img class="logo" src="~@/assets/img/hoxiuxiu-logo.png"/>
 
 		<div class="right">
-			您好，<b>{{$store.state.userInfo?$store.state.userInfo.companyName:''}}</b>
+			您好，<b>{{userInfo? `${userInfo.nickname} - ${userInfo.companyName}` :''}}</b>
 			<a @click="changePass">修改密码</a> |
 			<a @click="logout">退出</a>
 		</div>
@@ -39,6 +39,9 @@ export default {
 	name: "main-body",
 	components: { Foot},
 	computed:{
+		userInfo(){
+			return this.$store.state.userInfo
+		},
 		title(){
 			return this.$route.meta.name
 		},

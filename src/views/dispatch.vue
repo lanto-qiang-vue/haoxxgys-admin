@@ -111,7 +111,7 @@ export default {
 
 			postData: {items:[]},
 			postColumns: [
-				{title: '品类', key: 'pl', width: 70},
+				{title: '品类', key: 'plName', width: 70},
 				{title: '商品', key: 'goodsDesc', minWidth: 150},
 				{title: '发货数量（桶）', key: 'goodsNum', width: 120},
 			],
