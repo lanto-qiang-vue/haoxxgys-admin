@@ -157,11 +157,12 @@ export default {
 							[h('a', '查看')]
 						)
 					}},
-				{title: '推荐使用量', key: 'parts', minWidth: 100,
-					render:(h,params) =>{
-						let str= params.row.parts[params.row.pls[0].id].comments[0]
-						return h('span',  str.tjsyl+ str.unit)
-					}},
+				{title: '推荐使用量', key: 'tjsyl', minWidth: 100,
+					// render:(h,params) =>{
+						// let str= params.row.parts[params.row.pls[0].id].comments[0]
+						// return h('span',   params.row.tjsyl)
+					// }
+				},
 				{title: '要求送达日期', key: 'requestDeliveryTime', minWidth: 110,},
 			]
 		},
